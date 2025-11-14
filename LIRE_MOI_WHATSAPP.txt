@@ -1,0 +1,63 @@
+═══════════════════════════════════════════════════════════════════════
+  📱 NOTIFICATION WHATSAPP - CONFIGURATION RAPIDE
+═══════════════════════════════════════════════════════════════════════
+
+✅ ÉTAPE 1 : Ouvrez le fichier
+   📂 lib/config/admin_config.dart
+
+✅ ÉTAPE 2 : Remplacez le numéro
+   static const String adminWhatsAppNumber = '241074123456';
+                                              └─────────────┘
+                                              Votre numéro ici
+                                              
+   Format : [code pays][numéro]
+   Exemple Gabon : 241 + 074123456 = 241074123456
+
+✅ ÉTAPE 3 : Installez les dépendances
+   $ flutter pub get
+
+✅ ÉTAPE 4 : Lancez l'application
+   $ flutter run
+
+═══════════════════════════════════════════════════════════════════════
+
+🎯 RÉSULTAT :
+   Après chaque paiement, WhatsApp s'ouvre automatiquement
+   avec un message pré-rempli contenant tous les détails
+   de la commande pour l'administrateur !
+
+═══════════════════════════════════════════════════════════════════════
+
+📚 DOCUMENTATION COMPLÈTE :
+   • DEMARRAGE_RAPIDE_WHATSAPP.txt       ← Commence ici !
+   • GUIDE_VISUEL_WHATSAPP.txt            ← Guide illustré
+   • INSTRUCTIONS_WHATSAPP.md             ← Instructions détaillées
+   • RESUME_MODIFICATIONS_WHATSAPP.md     ← Résumé technique
+
+═══════════════════════════════════════════════════════════════════════
+
+❓ BESOIN D'AIDE ?
+   Consultez GUIDE_VISUEL_WHATSAPP.txt pour un guide visuel complet
+
+═══════════════════════════════════════════════════════════════════════
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

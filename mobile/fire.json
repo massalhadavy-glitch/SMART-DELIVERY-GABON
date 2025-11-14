@@ -1,0 +1,14 @@
+{
+  "expo": {
+    "extra": {
+      "firebaseConfig": {
+        "apiKey": "VOTRE_API_KEY",
+        "authDomain": "smart-delivery-gabon.firebaseapp.com",
+        "projectId": "smrt-delivery-gabon",
+        "storageBucket": "smrt-delivery-gabon.appspot.com",
+        "messagingSenderId": "VOTRE_SENDER_ID",
+        "appId": "VOTRE_APP_ID"
+      }
+    }
+  }
+}

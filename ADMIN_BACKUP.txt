@@ -1,0 +1,128 @@
+==========================================
+BACKUP ADMIN CREDENTIALS - SMART DELIVERY
+==========================================
+
+⚠️  FICHIER CONFIDENTIEL - NE PAS PARTAGER
+⚠️  CONSERVER DANS UN ENDROIT SÉCURISÉ
+
+==========================================
+IDENTIFIANTS PRINCIPAUX
+==========================================
+
+Email: admin@smartdelivery.com
+Password: Admin123!
+Role: super_admin
+Status: Active
+
+==========================================
+INFORMATIONS SUPABASE
+==========================================
+
+Project URL: [VOTRE_URL_SUPABASE]
+Project Reference: [VOTRE_REFERENCE]
+Database: PostgreSQL
+Auth Provider: Supabase Auth
+
+Tables utilisées:
+- auth.users (authentification)
+- public.users (profils)
+- public.admins (administrateurs)
+
+==========================================
+SCRIPTS DE RÉCUPÉRATION
+==========================================
+
+-- Vérifier l'admin
+SELECT 
+  u.email,
+  u.role,
+  a.admin_type,
+  u.created_at
+FROM public.users u
+LEFT JOIN public.admins a ON u.id = a.id
+WHERE u.email = 'admin@smartdelivery.com';
+
+-- Créer un nouvel admin (si nécessaire)
+SELECT public.create_admin('admin@smartdelivery.com', 'super_admin');
+
+-- Changer le mot de passe (via Dashboard Supabase)
+-- Authentication > Users > [admin@smartdelivery.com] > Reset Password
+
+==========================================
+PERMISSIONS ADMIN
+==========================================
+
+Accès complet à:
+- Gestion des utilisateurs
+- Gestion des colis
+- Configuration de l'application
+- Logs et monitoring
+- Paramètres système
+
+==========================================
+PLAN DE RÉCUPÉRATION D'URGENCE
+==========================================
+
+Si l'admin est perdu:
+
+1. Accéder au Dashboard Supabase
+2. Authentication > Users
+3. Rechercher admin@smartdelivery.com
+4. Reset Password
+5. Exécuter: SELECT public.create_admin('admin@smartdelivery.com', 'super_admin');
+
+Alternative (nouvel admin):
+1. Créer un nouvel utilisateur via Dashboard
+2. Exécuter: SELECT public.create_admin('NOUVEL_EMAIL', 'super_admin');
+
+==========================================
+LOGS DE SÉCURITÉ
+==========================================
+
+[Date] - Admin créé
+[Date] - Première connexion
+[Date] - Mot de passe changé
+[Date] - [Ajoutez les événements importants]
+
+==========================================
+CONTACTS D'URGENCE
+==========================================
+
+Développeur principal: [NOM]
+Email: [EMAIL]
+Téléphone: [TÉLÉPHONE]
+
+Support Supabase: https://supabase.com/support
+
+==========================================
+NOTES IMPORTANTES
+==========================================
+
+- Ce fichier contient des informations sensibles
+- Ne pas commiter dans Git
+- Chiffrer si possible
+- Mettre à jour régulièrement
+- Avoir une copie de sauvegarde
+
+==========================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

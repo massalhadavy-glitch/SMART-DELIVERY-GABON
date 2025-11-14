@@ -1,0 +1,15 @@
+# Fichier de configuration pour la signature de l'application
+# Copiez ce fichier vers key.properties et remplissez les valeurs réelles
+# ⚠️ NE COMMITEZ JAMAIS key.properties dans Git ! Il contient des informations sensibles.
+
+storePassword=votre_mot_de_passe_keystore
+keyPassword=votre_mot_de_passe_cle
+keyAlias=smart_delivery_key
+storeFile=../keystore/smart_delivery_gabon.jks
+
+
+
+
+
+
+

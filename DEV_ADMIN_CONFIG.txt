@@ -1,0 +1,165 @@
+==========================================
+CONFIGURATION ADMIN - ÉQUIPE DE DÉVELOPPEMENT
+==========================================
+
+📋 FICHIER DE CONFIGURATION POUR L'ÉQUIPE
+🔧 À UTILISER PENDANT LE DÉVELOPPEMENT
+
+==========================================
+COORDONNÉES DE DÉVELOPPEMENT
+==========================================
+
+Email: admin@smartdelivery.com
+Password: Admin123!
+Environment: Development
+Role: super_admin
+
+==========================================
+CONFIGURATION SUPABASE
+==========================================
+
+URL: [VOTRE_URL_SUPABASE]
+Anon Key: [VOTRE_ANON_KEY]
+Service Role Key: [VOTRE_SERVICE_ROLE_KEY]
+
+Fichier de config: lib/config/supabase_config.dart
+
+==========================================
+TABLES DE BASE DE DONNÉES
+==========================================
+
+1. auth.users
+   - Contient les utilisateurs authentifiés
+   - ID: UUID (clé primaire)
+   - Email: admin@smartdelivery.com
+
+2. public.users
+   - Profils des utilisateurs
+   - ID: UUID (FK vers auth.users)
+   - Role: 'admin' | 'user' | 'driver'
+
+3. public.admins
+   - Administrateurs
+   - ID: UUID (FK vers public.users)
+   - Admin_type: 'super_admin' | 'admin' | 'moderator'
+
+==========================================
+SCRIPTS DE DÉVELOPPEMENT
+==========================================
+
+-- Créer l'admin (à exécuter une fois)
+SELECT public.create_admin('admin@smartdelivery.com', 'super_admin');
+
+-- Vérifier l'admin
+SELECT 
+  u.email,
+  u.role,
+  a.admin_type
+FROM public.users u
+LEFT JOIN public.admins a ON u.id = a.id
+WHERE u.email = 'admin@smartdelivery.com';
+
+-- Supprimer l'admin (si nécessaire)
+DELETE FROM public.admins WHERE id IN (
+  SELECT id FROM auth.users WHERE email = 'admin@smartdelivery.com'
+);
+UPDATE public.users SET role = 'user' WHERE email = 'admin@smartdelivery.com';
+
+==========================================
+TEST DE CONNEXION
+==========================================
+
+1. Lancer l'application Flutter
+2. Aller sur la page d'onboarding
+3. Cliquer sur l'icône admin (en bas)
+4. Saisir:
+   - Email: admin@smartdelivery.com
+   - Password: Admin123!
+5. Vérifier la redirection vers l'interface admin
+
+==========================================
+DÉPANNAGE COMMUN
+==========================================
+
+Problème: "Vous n'êtes pas autorisé comme admin"
+Solution: Vérifier que role = 'admin' dans public.users
+
+Problème: "Utilisateur non trouvé"
+Solution: Créer l'utilisateur via Dashboard Supabase
+
+Problème: "Erreur de connexion"
+Solution: Vérifier les credentials Supabase
+
+==========================================
+ENVIRONNEMENTS
+==========================================
+
+Development:
+- Email: admin@smartdelivery.com
+- Password: Admin123!
+
+Staging:
+- [À configurer]
+
+Production:
+- [À configurer avec des credentials sécurisés]
+
+==========================================
+SÉCURITÉ EN DÉVELOPPEMENT
+==========================================
+
+⚠️  ATTENTION:
+- Ces credentials sont pour le développement uniquement
+- Ne jamais utiliser en production
+- Changer les mots de passe régulièrement
+- Ne pas commiter les vrais credentials dans Git
+
+==========================================
+COMMANDES UTILES
+==========================================
+
+-- Voir tous les utilisateurs
+SELECT * FROM public.users ORDER BY created_at DESC;
+
+-- Voir tous les admins
+SELECT 
+  u.email,
+  a.admin_type,
+  u.created_at
+FROM public.users u
+JOIN public.admins a ON u.id = a.id;
+
+-- Créer un nouvel utilisateur test
+INSERT INTO auth.users (id, email, encrypted_password, email_confirmed_at)
+VALUES (gen_random_uuid(), 'test@example.com', crypt('password123', gen_salt('bf')), NOW());
+
+==========================================
+NOTES DE L'ÉQUIPE
+==========================================
+
+[Date] - [Nom] - [Note]
+[Date] - [Nom] - [Note]
+[Date] - [Nom] - [Note]
+
+==========================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
