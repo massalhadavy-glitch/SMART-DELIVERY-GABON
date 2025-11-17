@@ -34,6 +34,14 @@
     native <methods>;
 }
 
+# Google Play Core (ignorer les classes manquantes - non utilisées dans cette app)
+-dontwarn com.google.android.play.core.splitcompat.**
+-dontwarn com.google.android.play.core.splitinstall.**
+-dontwarn com.google.android.play.core.tasks.**
+-keep class com.google.android.play.core.** { *; }
+
+
+
 
 
 

@@ -2,6 +2,12 @@
 
 ## 📋 Vérification Pré-Publication
 
+### ✅ 0. Compte Google Play Console
+
+- ✅ **Compte Google Play Console**: Configuré et actif
+- ✅ **Accès développeur**: Activé
+- ✅ **Paiement**: Configuré (si nécessaire)
+
 ### ✅ 1. Configuration Android
 
 #### Application ID
@@ -183,6 +189,7 @@ flutter pub run permission_handler:check_permissions
 - [Documentation Play Console](https://support.google.com/googleplay/android-developer)
 - [Flutter App Publishing](https://docs.flutter.dev/deployment/android)
 - [Android App Signing](https://developer.android.com/studio/publish/app-signing)
+
 
 
 
