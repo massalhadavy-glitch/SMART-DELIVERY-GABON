@@ -1,0 +1,22 @@
+URL de la Politique de Confidentialité pour Google Play Console
+================================================================
+
+URL complète :
+https://www.smartdeliverygabon.com/politique-confidentialite
+
+(Alternative : https://www.smartdeliverygabon.com/politique-confidentialite.html)
+
+Instructions :
+1. Connectez-vous à Google Play Console
+2. Allez dans "Politique et programmes" > "Politique de confidentialité"
+3. Collez l'URL ci-dessus dans le champ prévu
+4. Cliquez sur "Enregistrer"
+
+Vérification :
+- Testez l'URL dans votre navigateur pour confirmer qu'elle fonctionne
+- Assurez-vous que la page s'affiche correctement
+- Vérifiez que toutes les informations de contact sont remplies
+
+Date : 2024
+Domaine : www.smartdeliverygabon.com
+
