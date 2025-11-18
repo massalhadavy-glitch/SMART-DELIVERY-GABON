@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import HomePage from './pages/HomePage';
 import SendPackagePage from './pages/SendPackagePage';
@@ -28,12 +28,12 @@ function App() {
         <footer className="footer">
           <p>&copy; 2024 Smart Delivery Gabon. Tous droits réservés.</p>
           <p style={{ marginTop: '0.5rem' }}>
-            <a 
-              href="/politique-confidentialite" 
+            <Link 
+              to="/politique-confidentialite" 
               style={{ color: 'white', textDecoration: 'underline' }}
             >
               Politique de Confidentialité
-            </a>
+            </Link>
           </p>
         </footer>
       </div>
