@@ -9,7 +9,7 @@ const PrivacyPolicyPage = () => {
         <h2>Smart Delivery Gabon</h2>
         
         <div className="last-updated">
-          <strong>Dernière mise à jour :</strong> [Date à remplir]
+          <strong>Dernière mise à jour :</strong> {new Date().toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' })}
         </div>
 
         <section>
@@ -257,10 +257,10 @@ const PrivacyPolicyPage = () => {
           
           <div className="contact-info">
             <p><strong>Smart Delivery Gabon</strong></p>
-            <p><strong>Email :</strong> [Adresse email à remplir]</p>
-            <p><strong>Téléphone :</strong> [Numéro de téléphone à remplir]</p>
-            <p><strong>Adresse :</strong> [Adresse physique à remplir]</p>
-            <p><strong>Site web :</strong> https://www.smartdeliverygabon.com</p>
+            <p><strong>Email :</strong> <a href="mailto:smartdeliverygabon@gmail.com">smartdeliverygabon@gmail.com</a></p>
+            <p><strong>Téléphone :</strong> <a href="tel:+241077773627">077773627</a></p>
+            <p><strong>Adresse :</strong> Gabon</p>
+            <p><strong>Site web :</strong> <a href="https://www.smartdeliverygabon.com" target="_blank" rel="noopener noreferrer">https://www.smartdeliverygabon.com</a></p>
           </div>
           
           <p>Nous nous engageons à répondre à vos demandes dans un délai raisonnable et conformément à la législation applicable en matière de protection des données.</p>
@@ -277,8 +277,8 @@ const PrivacyPolicyPage = () => {
         </section>
 
         <div className="footer-note">
-          <p><strong>Date d'entrée en vigueur :</strong> [Date à remplir]</p>
-          <p><strong>Dernière mise à jour :</strong> [Date à remplir]</p>
+          <p><strong>Date d'entrée en vigueur :</strong> {new Date().toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+          <p><strong>Dernière mise à jour :</strong> {new Date().toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
           <p style={{ marginTop: '20px', fontStyle: 'italic' }}>
             Cette politique de confidentialité a été rédigée pour Smart Delivery Gabon et est conforme aux exigences de Google Play Console et aux lois applicables en matière de protection des données.
           </p>
