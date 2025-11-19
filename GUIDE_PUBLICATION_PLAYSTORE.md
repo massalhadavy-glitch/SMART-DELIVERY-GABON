@@ -310,10 +310,15 @@ Smart Delivery Gabon - Livraison rapide, suivi fiable.
 
 **OBLIGATOIRE :** Vous devez fournir une URL vers votre politique de confidentialité.
 
-**Options :**
-1. Créer une page sur votre site web : `https://smartdeliverygabon.com/privacy`
-2. Utiliser un générateur en ligne (ex: privacypolicygenerator.info)
-3. Héberger sur GitHub Pages
+**URL de la politique de confidentialité :**
+
+```
+https://www.smartdeliverygabon.com/politique-confidentialite
+```
+
+**Options alternatives (si nécessaire) :**
+1. Utiliser un générateur en ligne (ex: privacypolicygenerator.info)
+2. Héberger sur GitHub Pages
 
 **Contenu minimum :**
 - Quelles données sont collectées

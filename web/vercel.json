@@ -6,6 +6,10 @@
   "framework": "create-react-app",
   "rewrites": [
     {
+      "source": "/politique-confidentialite.html",
+      "destination": "/politique-confidentialite.html"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }

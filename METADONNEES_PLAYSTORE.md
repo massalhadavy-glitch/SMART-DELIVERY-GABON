@@ -170,9 +170,9 @@ Version 1.1.0
 
 ---
 
-## Politique de confidentialité (Template)
+## Politique de confidentialité
 
-**URL requise :** `https://smartdeliverygabon.com/privacy`
+**URL requise :** `https://www.smartdeliverygabon.com/politique-confidentialite`
 
 **Contenu minimum à inclure :**
 
