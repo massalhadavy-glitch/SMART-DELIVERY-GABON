@@ -163,3 +163,8 @@ Si vous avez des questions ou des problèmes :
 **Projet :** Smart Delivery Gabon  
 **Statut :** ✅ Politique de confidentialité prête, URL à configurer dans Play Console
 
+
+
+
+
+

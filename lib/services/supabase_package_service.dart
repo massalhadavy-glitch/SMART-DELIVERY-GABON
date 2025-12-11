@@ -59,30 +59,122 @@ class SupabasePackageService {
   /// Met à jour le statut d'un colis
   Future<void> updatePackageStatus(String packageId, String newStatus) async {
     try {
-      print('🔄 Mise à jour du statut pour: $packageId → $newStatus');
+      print('🔄 ========== MISE À JOUR DU STATUT ==========');
+      print('🔄 Package ID: $packageId');
+      print('🔄 Nouveau statut: $newStatus');
       
+      // Vérifier que l'utilisateur est authentifié
+      final currentUser = _supabase.auth.currentUser;
+      if (currentUser == null) {
+        print('❌ ERREUR: Aucun utilisateur authentifié');
+        throw Exception('Vous devez être connecté pour mettre à jour le statut d\'un colis');
+      }
+      
+      print('✅ Utilisateur authentifié: ${currentUser.id} (${currentUser.email})');
+      
+      // Vérifier que l'utilisateur est admin (dans la table users)
+      try {
+        final userData = await _supabase
+            .from('users')
+            .select('role')
+            .eq('id', currentUser.id)
+            .maybeSingle();
+        
+        print('📊 Données utilisateur: $userData');
+        
+        if (userData == null || userData['role'] != 'admin') {
+          print('❌ ERREUR: L\'utilisateur n\'est pas admin (rôle: ${userData?['role'] ?? 'non trouvé'})');
+          throw Exception('Seuls les administrateurs peuvent mettre à jour le statut d\'un colis');
+        }
+        
+        print('✅ Utilisateur confirmé comme admin');
+      } catch (e) {
+        if (e.toString().contains('Seuls les administrateurs')) {
+          rethrow;
+        }
+        print('⚠️ Erreur lors de la vérification du rôle, tentative de mise à jour quand même: $e');
+      }
+      
+      // Vérifier que le colis existe avant la mise à jour
+      final existingPackage = await _supabase
+          .from('packages')
+          .select('id, tracking_number, status')
+          .eq('tracking_number', packageId.toUpperCase())
+          .maybeSingle();
+      
+      if (existingPackage == null) {
+        print('❌ ERREUR: Colis non trouvé avec le tracking number: $packageId');
+        throw Exception('Colis non trouvé avec le numéro de suivi: $packageId');
+      }
+      
+      print('✅ Colis trouvé: ${existingPackage['tracking_number']} (statut actuel: ${existingPackage['status']})');
+      
+      // Effectuer la mise à jour
+      print('🔄 Tentative de mise à jour dans Supabase...');
       final result = await _supabase
           .from('packages')
           .update({
             'status': newStatus,
             'updated_at': DateTime.now().toIso8601String(),
           })
-          .eq('tracking_number', packageId);
+          .eq('tracking_number', packageId.toUpperCase())
+          .select();
       
-      print('✅ Statut mis à jour avec succès: $result');
+      print('📊 Résultat de la mise à jour: $result');
+      
+      if (result.isEmpty) {
+        print('⚠️ Aucune ligne mise à jour, vérification...');
+        // Vérifier à nouveau
+        final verification = await _supabase
+            .from('packages')
+            .select('id, tracking_number, status')
+            .eq('tracking_number', packageId.toUpperCase())
+            .maybeSingle();
+        
+        if (verification != null && verification['status'] == newStatus) {
+          print('✅ Mise à jour réussie (vérifiée)');
+        } else {
+          print('❌ La mise à jour semble avoir échoué');
+          throw Exception('La mise à jour du statut a échoué. Vérifiez vos permissions.');
+        }
+      } else {
+        print('✅ Statut mis à jour avec succès');
+        print('✅ Nouveau statut confirmé: ${result[0]['status']}');
+      }
       
       // Forcer la mise à jour du Stream en vérifiant la table
       final updatedPackage = await _supabase
           .from('packages')
           .select()
-          .eq('tracking_number', packageId)
+          .eq('tracking_number', packageId.toUpperCase())
           .maybeSingle();
       
       if (updatedPackage != null) {
-        print('✅ Vérification: ${updatedPackage['tracking_number']} - ${updatedPackage['status']}');
+        print('✅ Vérification finale: ${updatedPackage['tracking_number']} - ${updatedPackage['status']}');
+      } else {
+        print('⚠️ Colis non trouvé après mise à jour (peut être normal si le Stream se met à jour)');
       }
+      
+      print('🔄 ===========================================');
+    } on PostgrestException catch (e) {
+      print('❌ ERREUR PostgrestException: ${e.message}');
+      print('❌ Code: ${e.code}');
+      print('❌ Détails: ${e.details}');
+      print('❌ Hint: ${e.hint}');
+      
+      String errorMessage = 'Erreur lors de la mise à jour du statut';
+      if (e.message.contains('permission denied') || e.message.contains('new row violates row-level security')) {
+        errorMessage = 'Permission refusée. Vérifiez que vous êtes bien connecté en tant qu\'administrateur.';
+      } else if (e.message.contains('could not find')) {
+        errorMessage = 'Colis non trouvé. Vérifiez le numéro de suivi.';
+      } else {
+        errorMessage = 'Erreur de base de données: ${e.message}';
+      }
+      
+      throw Exception(errorMessage);
     } catch (e) {
-      print('❌ Erreur updatePackageStatus: $e');
+      print('❌ ERREUR updatePackageStatus: $e');
+      print('❌ Type d\'erreur: ${e.runtimeType}');
       rethrow;
     }
   }

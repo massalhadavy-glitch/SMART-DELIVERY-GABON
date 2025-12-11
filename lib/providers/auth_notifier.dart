@@ -131,4 +131,114 @@ class AuthNotifier extends ChangeNotifier {
     // Si c'est un téléphone, le normaliser
     return normalizePhoneNumber(_user!);
   }
+
+  // ------------------------------------------------------------------
+  // 📧 Mettre à jour l'email de l'utilisateur
+  // ------------------------------------------------------------------
+  Future<void> updateEmail(String newEmail) async {
+    try {
+      final currentUser = _supabase.auth.currentUser;
+      if (currentUser == null) {
+        throw Exception('Aucun utilisateur connecté.');
+      }
+
+      // Valider le format de l'email
+      if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(newEmail)) {
+        throw Exception('Format d\'email invalide.');
+      }
+
+      // Mettre à jour l'email dans Supabase Auth
+      await _supabase.auth.updateUser(
+        UserAttributes(email: newEmail),
+      );
+
+      // Mettre à jour l'email dans la table public.users
+      try {
+        await _supabase
+            .from('users')
+            .update({'email': newEmail, 'updated_at': DateTime.now().toIso8601String()})
+            .eq('id', currentUser.id);
+        
+        debugPrint('✅ Email mis à jour dans public.users');
+      } catch (e) {
+        debugPrint('⚠️ Erreur lors de la mise à jour dans public.users: $e');
+        // On continue quand même car l'email dans auth.users est mis à jour
+      }
+
+      // Mettre à jour l'état local
+      _user = newEmail;
+      notifyListeners();
+      
+      debugPrint('✅ Email mis à jour avec succès: $newEmail');
+    } on AuthException catch (e) {
+      debugPrint('❌ Erreur de mise à jour d\'email: ${e.message}');
+      throw Exception(e.message);
+    } catch (e) {
+      debugPrint('❌ Erreur inattendue lors de la mise à jour d\'email: $e');
+      throw Exception('Erreur lors de la mise à jour de l\'email : $e');
+    }
+  }
+
+  // ------------------------------------------------------------------
+  // 🔐 Mettre à jour le mot de passe de l'utilisateur
+  // ------------------------------------------------------------------
+  Future<void> updatePassword(String newPassword) async {
+    try {
+      final currentUser = _supabase.auth.currentUser;
+      if (currentUser == null) {
+        throw Exception('Aucun utilisateur connecté.');
+      }
+
+      // Valider la force du mot de passe
+      if (newPassword.length < 6) {
+        throw Exception('Le mot de passe doit contenir au moins 6 caractères.');
+      }
+
+      // Mettre à jour le mot de passe dans Supabase Auth
+      await _supabase.auth.updateUser(
+        UserAttributes(password: newPassword),
+      );
+
+      debugPrint('✅ Mot de passe mis à jour avec succès');
+    } on AuthException catch (e) {
+      debugPrint('❌ Erreur de mise à jour de mot de passe: ${e.message}');
+      throw Exception(e.message);
+    } catch (e) {
+      debugPrint('❌ Erreur inattendue lors de la mise à jour de mot de passe: $e');
+      throw Exception('Erreur lors de la mise à jour du mot de passe : $e');
+    }
+  }
+
+  // ------------------------------------------------------------------
+  // 🔐 Vérifier le mot de passe actuel (pour confirmation avant changement)
+  // ------------------------------------------------------------------
+  Future<bool> verifyCurrentPassword(String password) async {
+    try {
+      final currentUser = _supabase.auth.currentUser;
+      if (currentUser == null || currentUser.email == null) {
+        throw Exception('Aucun utilisateur connecté.');
+      }
+
+      // Tenter de se connecter avec le mot de passe actuel
+      try {
+        await _supabase.auth.signInWithPassword(
+          email: currentUser.email!,
+          password: password,
+        );
+
+        // Si on arrive ici, le mot de passe est correct
+        // La session a été mise à jour par signInWithPassword, ce qui est correct
+        debugPrint('✅ Mot de passe vérifié avec succès');
+        return true;
+      } on AuthException catch (e) {
+        // Si le mot de passe est incorrect, la session actuelle reste intacte
+        // car signInWithPassword n'a pas réussi
+        debugPrint('❌ Mot de passe incorrect: ${e.message}');
+        return false;
+      }
+    } catch (e) {
+      debugPrint('❌ Erreur lors de la vérification: $e');
+      return false;
+    }
+  }
 }

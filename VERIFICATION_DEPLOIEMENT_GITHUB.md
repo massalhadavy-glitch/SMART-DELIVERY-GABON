@@ -238,3 +238,8 @@ Le remote est déjà configuré, c'est normal. Vous pouvez directement faire `gi
 **Projet :** Smart Delivery Gabon  
 **Statut :** ⚠️ Modifications locales non poussées - Action requise : `git push`
 
+
+
+
+
+

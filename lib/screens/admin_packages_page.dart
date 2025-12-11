@@ -699,7 +699,7 @@ class _AdminPackagesPageState extends State<AdminPackagesPage> with TickerProvid
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (_) => const StatusUpdatePage(),
+                              builder: (_) => StatusUpdatePage(package: package),
                             ),
                           );
                         },

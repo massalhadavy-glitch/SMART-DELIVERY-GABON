@@ -194,3 +194,8 @@ Si vous rencontrez des problèmes :
 **Projet :** Smart Delivery Gabon  
 **Statut :** ✅ Fichiers prêts, déploiement à vérifier manuellement
 
+
+
+
+
+

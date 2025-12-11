@@ -6,7 +6,9 @@ import '../providers/package_notifier.dart';
 import '../models/package.dart';
 
 class StatusUpdatePage extends StatefulWidget {
-  const StatusUpdatePage({super.key});
+  final Package? package; // Colis optionnel pour pré-remplir les informations
+  
+  const StatusUpdatePage({super.key, this.package});
 
   @override
   State<StatusUpdatePage> createState() => _StatusUpdatePageState();
@@ -20,6 +22,18 @@ class _StatusUpdatePageState extends State<StatusUpdatePage> {
 
   // ... (availableStatuses inchangé)
   final List<String> availableStatuses = Package.availableStatuses;
+
+  @override
+  void initState() {
+    super.initState();
+    // Si un colis est fourni, pré-remplir les informations
+    if (widget.package != null) {
+      _foundPackage = widget.package;
+      _trackingController.text = widget.package!.trackingNumber;
+      _selectedStatus = widget.package!.status;
+      _message = 'Colis sélectionné : ${widget.package!.trackingNumber}. Statut actuel : ${widget.package!.status}';
+    }
+  }
 
 
   void _searchPackage() {
@@ -64,10 +78,18 @@ class _StatusUpdatePageState extends State<StatusUpdatePage> {
     });
   }
 
-  Future<void> _updateStatus() async { // Rendre asynchrone
+  Future<void> _updateStatus() async {
     if (_foundPackage == null || _selectedStatus == null) {
       setState(() {
         _message = 'Veuillez d\'abord trouver le colis et sélectionner un statut.';
+      });
+      return;
+    }
+
+    // Vérifier que le statut a changé
+    if (_foundPackage!.status == _selectedStatus) {
+      setState(() {
+        _message = 'Le statut est déjà défini à "$_selectedStatus". Aucune modification nécessaire.';
       });
       return;
     }
@@ -80,6 +102,11 @@ class _StatusUpdatePageState extends State<StatusUpdatePage> {
     try {
       final packageNotifier = Provider.of<PackageNotifier>(context, listen: false);
 
+      print('🔄 StatusUpdatePage - Début de la mise à jour');
+      print('📦 Colis: ${_foundPackage!.trackingNumber}');
+      print('📊 Ancien statut: ${_foundPackage!.status}');
+      print('📊 Nouveau statut: $_selectedStatus');
+
       // Utilise le tracking number pour Supabase
       await packageNotifier.updatePackageStatus(
         _foundPackage!.trackingNumber, 
@@ -90,7 +117,7 @@ class _StatusUpdatePageState extends State<StatusUpdatePage> {
       const successMessageBase = 'Statut du colis mis à jour avec succès !';
       
       if (mounted) {
-         setState(() {
+        setState(() {
           _message = successMessageBase;
           _foundPackage = null; // Réinitialiser pour masquer le formulaire
           _trackingController.clear();
@@ -102,18 +129,60 @@ class _StatusUpdatePageState extends State<StatusUpdatePage> {
           const SnackBar(
             content: Text(successMessageBase),
             backgroundColor: Colors.green,
+            duration: Duration(seconds: 3),
           ),
         );
       }
     } catch (e) {
-       if (mounted) {
-         setState(() {
-            _message = 'Échec de la mise à jour: ${e.toString()}';
-         });
-         ScaffoldMessenger.of(context).showSnackBar(
+      print('❌ StatusUpdatePage - Erreur: $e');
+      
+      if (mounted) {
+        String errorMessage = 'Échec de la mise à jour';
+        String detailedError = e.toString();
+        
+        // Messages d'erreur plus clairs
+        if (detailedError.contains('connecté') || detailedError.contains('authentifié')) {
+          errorMessage = 'Vous devez être connecté en tant qu\'administrateur pour mettre à jour le statut.';
+        } else if (detailedError.contains('permission') || detailedError.contains('refusée')) {
+          errorMessage = 'Permission refusée. Vérifiez que vous êtes bien connecté en tant qu\'administrateur.';
+        } else if (detailedError.contains('non trouvé')) {
+          errorMessage = 'Colis non trouvé. Vérifiez le numéro de suivi.';
+        } else if (detailedError.contains('RLS') || detailedError.contains('row-level security')) {
+          errorMessage = 'Erreur de permissions. Contactez un administrateur pour vérifier les paramètres de sécurité.';
+        } else {
+          errorMessage = 'Erreur lors de la mise à jour: ${detailedError.length > 100 ? detailedError.substring(0, 100) + "..." : detailedError}';
+        }
+        
+        setState(() {
+          _message = errorMessage;
+        });
+        
+        ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Erreur: ${e.toString()}'),
+            content: Text(errorMessage),
             backgroundColor: Colors.red,
+            duration: const Duration(seconds: 5),
+            action: SnackBarAction(
+              label: 'Détails',
+              textColor: Colors.white,
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: const Text('Détails de l\'erreur'),
+                    content: SingleChildScrollView(
+                      child: Text(detailedError),
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text('Fermer'),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
           ),
         );
       }

@@ -68,8 +68,8 @@ Avant de publier, n'oubliez pas de remplir les informations suivantes dans le fi
 
 1. **Date de dernière mise à jour** (ligne 127)
 2. **Email de contact** (ligne 375)
-3. **Numéro de téléphone** (ligne 376)
-4. **Adresse physique** (ligne 377)
+3. **Numéro de téléphone** (ligne)
+4. **Adresse physique** (ligne 37)
 5. **URL du site web** (ligne 378)
 6. **Date d'entrée en vigueur** (ligne 395)
 
@@ -135,7 +135,7 @@ Une **page React** a été créée pour la politique de confidentialité au lieu
 
 ---
 
-**Date de création :** 2024  
+**Date de création :** 2025  
 **Projet :** Smart Delivery Gabon  
 **Plateforme :** Vercel + Google Play Console
 

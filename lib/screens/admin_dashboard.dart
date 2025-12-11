@@ -6,6 +6,7 @@ import '../models/package.dart';
 import 'package_detail_page.dart';
 import 'status_update_page.dart';
 import 'admin_packages_page.dart';
+import 'driver_tracking_page.dart';
 
 class AdminDashboard extends StatefulWidget {
   const AdminDashboard({super.key});
@@ -733,18 +734,13 @@ class _AdminDashboardState extends State<AdminDashboard> with TickerProviderStat
             children: [
               Expanded(
                 child: _buildActionButton(
-                  'Test Colis',
-                  Icons.bug_report,
-                  Colors.orange,
+                  'Suivi des Motos',
+                  Icons.motorcycle,
+                  Colors.red,
                   () {
-                    // Test de diagnostic des colis
-                    final packageNotifier = Provider.of<PackageNotifier>(context, listen: false);
-                    packageNotifier.debugPrintState();
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('Test effectué - ${packageNotifier.packages.length} colis trouvés'),
-                        backgroundColor: Colors.orange,
-                      ),
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const DriverTrackingPage()),
                     );
                   },
                 ),

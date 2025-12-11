@@ -105,7 +105,7 @@ class _AdminSettingsPageState extends State<AdminSettingsPage> with TickerProvid
                 const SizedBox(height: 24),
                 
                 // Paramètres de sécurité
-                _buildSecuritySection(context, theme),
+                _buildSecuritySection(context, theme, authNotifier),
                 
                 const SizedBox(height: 24),
                 
@@ -323,7 +323,7 @@ class _AdminSettingsPageState extends State<AdminSettingsPage> with TickerProvid
     );
   }
 
-  Widget _buildSecuritySection(BuildContext context, ThemeData theme) {
+  Widget _buildSecuritySection(BuildContext context, ThemeData theme, AuthNotifier authNotifier) {
     return _buildSection(
       context,
       theme,
@@ -331,11 +331,19 @@ class _AdminSettingsPageState extends State<AdminSettingsPage> with TickerProvid
       Icons.security,
       [
         _buildActionTile(
+          'Changer l\'email',
+          'Mettre à jour votre adresse email',
+          Icons.email,
+          () {
+            _showChangeEmailDialog(authNotifier);
+          },
+        ),
+        _buildActionTile(
           'Changer le mot de passe',
           'Mettre à jour votre mot de passe',
           Icons.lock,
           () {
-            _showChangePasswordDialog();
+            _showChangePasswordDialog(authNotifier);
           },
         ),
         _buildActionTile(
@@ -518,18 +526,349 @@ class _AdminSettingsPageState extends State<AdminSettingsPage> with TickerProvid
     );
   }
 
-  void _showChangePasswordDialog() {
+  void _showChangeEmailDialog(AuthNotifier authNotifier) {
+    final emailController = TextEditingController();
+    final passwordController = TextEditingController();
+    bool isLoading = false;
+
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Changer le mot de passe'),
-        content: const Text('Cette fonctionnalité sera disponible prochainement.'),
+      builder: (context) => StatefulBuilder(
+        builder: (context, setState) => AlertDialog(
+          title: const Row(
+            children: [
+              Icon(Icons.email, color: Colors.blue),
+              SizedBox(width: 8),
+              Text('Changer l\'email'),
+            ],
+          ),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Email actuel: ${authNotifier.user ?? "Non disponible"}',
+                  style: const TextStyle(fontSize: 12, color: Colors.grey),
+                ),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: emailController,
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: const InputDecoration(
+                    labelText: 'Nouvel email',
+                    hintText: 'nouveau@example.com',
+                    prefixIcon: Icon(Icons.email),
+                    border: OutlineInputBorder(),
+                  ),
+                  enabled: !isLoading,
+                ),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: passwordController,
+                  obscureText: true,
+                  decoration: const InputDecoration(
+                    labelText: 'Mot de passe actuel',
+                    hintText: 'Confirmez avec votre mot de passe',
+                    prefixIcon: Icon(Icons.lock),
+                    border: OutlineInputBorder(),
+                  ),
+                  enabled: !isLoading,
+                ),
+                if (isLoading) ...[
+                  const SizedBox(height: 16),
+                  const Center(child: CircularProgressIndicator()),
+                ],
+              ],
+            ),
+          ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('OK'),
+              onPressed: isLoading
+                  ? null
+                  : () => Navigator.pop(context),
+              child: const Text('Annuler'),
+            ),
+            ElevatedButton(
+              onPressed: isLoading
+                  ? null
+                  : () async {
+                    if (emailController.text.trim().isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Veuillez entrer un nouvel email'),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                      return;
+                    }
+
+                    if (passwordController.text.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Veuillez entrer votre mot de passe actuel'),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                      return;
+                    }
+
+                    setState(() => isLoading = true);
+
+                    try {
+                      // Vérifier le mot de passe actuel
+                      final isValid = await authNotifier.verifyCurrentPassword(
+                        passwordController.text,
+                      );
+
+                      if (!isValid) {
+                        if (context.mounted) {
+                          setState(() => isLoading = false);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Mot de passe incorrect'),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                        }
+                        return;
+                      }
+
+                      // Mettre à jour l'email
+                      await authNotifier.updateEmail(emailController.text.trim());
+
+                      if (context.mounted) {
+                        Navigator.pop(context);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Email mis à jour avec succès'),
+                            backgroundColor: Colors.green,
+                          ),
+                        );
+                      }
+                    } catch (e) {
+                      if (context.mounted) {
+                        setState(() => isLoading = false);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Erreur: ${e.toString()}'),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                      }
+                    }
+                  },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Theme.of(context).primaryColor,
+                foregroundColor: Colors.white,
+              ),
+              child: const Text('Changer'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showChangePasswordDialog(AuthNotifier authNotifier) {
+    final currentPasswordController = TextEditingController();
+    final newPasswordController = TextEditingController();
+    final confirmPasswordController = TextEditingController();
+    bool isLoading = false;
+    bool obscureCurrentPassword = true;
+    bool obscureNewPassword = true;
+    bool obscureConfirmPassword = true;
+
+    showDialog(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setState) => AlertDialog(
+          title: const Row(
+            children: [
+              Icon(Icons.lock, color: Colors.blue),
+              SizedBox(width: 8),
+              Text('Changer le mot de passe'),
+            ],
           ),
-        ],
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TextField(
+                  controller: currentPasswordController,
+                  obscureText: obscureCurrentPassword,
+                  decoration: InputDecoration(
+                    labelText: 'Mot de passe actuel',
+                    hintText: 'Entrez votre mot de passe actuel',
+                    prefixIcon: const Icon(Icons.lock),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        obscureCurrentPassword
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          obscureCurrentPassword = !obscureCurrentPassword;
+                        });
+                      },
+                    ),
+                    border: const OutlineInputBorder(),
+                  ),
+                  enabled: !isLoading,
+                ),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: newPasswordController,
+                  obscureText: obscureNewPassword,
+                  decoration: InputDecoration(
+                    labelText: 'Nouveau mot de passe',
+                    hintText: 'Au moins 6 caractères',
+                    prefixIcon: const Icon(Icons.lock_outline),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        obscureNewPassword ? Icons.visibility : Icons.visibility_off,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          obscureNewPassword = !obscureNewPassword;
+                        });
+                      },
+                    ),
+                    border: const OutlineInputBorder(),
+                  ),
+                  enabled: !isLoading,
+                ),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: confirmPasswordController,
+                  obscureText: obscureConfirmPassword,
+                  decoration: InputDecoration(
+                    labelText: 'Confirmer le nouveau mot de passe',
+                    hintText: 'Répétez le nouveau mot de passe',
+                    prefixIcon: const Icon(Icons.lock_outline),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        obscureConfirmPassword
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          obscureConfirmPassword = !obscureConfirmPassword;
+                        });
+                      },
+                    ),
+                    border: const OutlineInputBorder(),
+                  ),
+                  enabled: !isLoading,
+                ),
+                if (isLoading) ...[
+                  const SizedBox(height: 16),
+                  const Center(child: CircularProgressIndicator()),
+                ],
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: isLoading
+                  ? null
+                  : () => Navigator.pop(context),
+              child: const Text('Annuler'),
+            ),
+            ElevatedButton(
+              onPressed: isLoading
+                  ? null
+                  : () async {
+                    if (currentPasswordController.text.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Veuillez entrer votre mot de passe actuel'),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                      return;
+                    }
+
+                    if (newPasswordController.text.length < 6) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                              'Le nouveau mot de passe doit contenir au moins 6 caractères'),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                      return;
+                    }
+
+                    if (newPasswordController.text !=
+                        confirmPasswordController.text) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Les mots de passe ne correspondent pas'),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                      return;
+                    }
+
+                    setState(() => isLoading = true);
+
+                    try {
+                      // Vérifier le mot de passe actuel
+                      final isValid = await authNotifier.verifyCurrentPassword(
+                        currentPasswordController.text,
+                      );
+
+                      if (!isValid) {
+                        if (context.mounted) {
+                          setState(() => isLoading = false);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Mot de passe actuel incorrect'),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                        }
+                        return;
+                      }
+
+                      // Mettre à jour le mot de passe
+                      await authNotifier.updatePassword(
+                        newPasswordController.text,
+                      );
+
+                      if (context.mounted) {
+                        Navigator.pop(context);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Mot de passe mis à jour avec succès'),
+                            backgroundColor: Colors.green,
+                          ),
+                        );
+                      }
+                    } catch (e) {
+                      if (context.mounted) {
+                        setState(() => isLoading = false);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Erreur: ${e.toString()}'),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                      }
+                    }
+                  },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Theme.of(context).primaryColor,
+                foregroundColor: Colors.white,
+              ),
+              child: const Text('Changer'),
+            ),
+          ],
+        ),
       ),
     );
   }
