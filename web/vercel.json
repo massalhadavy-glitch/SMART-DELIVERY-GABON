@@ -10,6 +10,10 @@
       "destination": "/politique-confidentialite.html"
     },
     {
+      "source": "/demande-suppression-donnees.html",
+      "destination": "/demande-suppression-donnees.html"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }

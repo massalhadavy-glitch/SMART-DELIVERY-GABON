@@ -33,7 +33,11 @@ CREATE TABLE IF NOT EXISTS public.admins (
 -- 3. Fonction pour synchroniser auth.users avec public.users
 -- ============================================
 CREATE OR REPLACE FUNCTION public.handle_new_user()
-RETURNS TRIGGER AS $$
+RETURNS TRIGGER
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, pg_temp
+AS $$
 BEGIN
   INSERT INTO public.users (id, email, role)
   VALUES (
@@ -43,7 +47,7 @@ BEGIN
   );
   RETURN NEW;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$;
 
 -- Trigger pour créer automatiquement un profil utilisateur
 DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
@@ -58,7 +62,11 @@ CREATE OR REPLACE FUNCTION public.create_admin(
   user_email TEXT,
   admin_role TEXT DEFAULT 'super_admin'
 )
-RETURNS void AS $$
+RETURNS void
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, pg_temp
+AS $$
 DECLARE
   user_id UUID;
 BEGIN
@@ -81,20 +89,24 @@ BEGIN
     SET admin_type = admin_role, 
         updated_at = NOW();
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$;
 
 -- ============================================
 -- 5. Fonction pour vérifier si un utilisateur est admin
 -- ============================================
 CREATE OR REPLACE FUNCTION public.is_user_admin(user_id UUID)
-RETURNS BOOLEAN AS $$
+RETURNS BOOLEAN
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, pg_temp
+AS $$
 BEGIN
   RETURN EXISTS (
     SELECT 1 FROM public.users 
     WHERE id = user_id AND role = 'admin'
   );
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$;
 
 -- ============================================
 -- 6. Row Level Security (RLS)

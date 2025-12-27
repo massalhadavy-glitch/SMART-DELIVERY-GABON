@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../providers/auth_notifier.dart';
 import 'status_update_page.dart';
 import 'login_page.dart';
@@ -290,12 +291,239 @@ class ProfilePage extends StatelessWidget {
                     ),
                   ),
 
+                const SizedBox(height: 12),
+
+                // Demande de suppression de compte (pour tous les utilisateurs connectés)
+                if (isAuthenticated)
+                  Card(
+                    elevation: 2,
+                    color: Colors.orange.withOpacity(0.05),
+                    child: ListTile(
+                      leading: Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: Colors.orange.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: const Icon(Icons.delete_outline, color: Colors.orange, size: 24),
+                      ),
+                      title: const Text(
+                        'Demander la suppression de mon compte',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.orange,
+                        ),
+                      ),
+                      subtitle: const Text('Supprimer votre compte et toutes vos données associées'),
+                      trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                      onTap: () {
+                        _showDeleteAccountRequestDialog(context, authNotifier, isAdmin);
+                      },
+                    ),
+                  ),
+
                 const SizedBox(height: 40),
               ],
             ),
           ),
         );
       },
+    );
+  }
+
+  void _showDeleteAccountRequestDialog(BuildContext context, AuthNotifier authNotifier, bool isAdmin) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Row(
+          children: [
+            Icon(Icons.warning, color: Colors.orange, size: 28),
+            SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                'Demande de suppression de compte',
+                style: TextStyle(fontSize: 18),
+              ),
+            ),
+          ],
+        ),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Vous êtes sur le point de demander la suppression de votre compte et de toutes vos données associées.',
+                style: TextStyle(fontSize: 16),
+              ),
+              const SizedBox(height: 16),
+              const Text(
+                'Les données suivantes seront supprimées :',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 8),
+              const Text('• Votre profil utilisateur'),
+              const Text('• Vos commandes et colis'),
+              const Text('• Vos informations personnelles'),
+              const Text('• Votre historique de livraisons'),
+              const SizedBox(height: 16),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.orange.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.orange, width: 1),
+                ),
+                child: const Row(
+                  children: [
+                    Icon(Icons.info_outline, color: Colors.orange, size: 20),
+                    SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        'Cette action est irréversible. Veuillez contacter le support pour finaliser votre demande.',
+                        style: TextStyle(fontSize: 13),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Annuler'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              Navigator.pop(context);
+              // Ouvrir l'email ou le formulaire de contact
+              await _openDeleteAccountRequest(context, authNotifier);
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.orange,
+              foregroundColor: Colors.white,
+            ),
+            child: const Text('Continuer'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _openDeleteAccountRequest(BuildContext context, AuthNotifier authNotifier) async {
+    final userIdentifier = authNotifier.user ?? 'Utilisateur non identifié';
+    final subject = Uri.encodeComponent('Demande de suppression de compte - Smart Delivery Gabon');
+    final body = Uri.encodeComponent(
+      'Bonjour,\n\n'
+      'Je souhaite demander la suppression de mon compte et de toutes mes données associées.\n\n'
+      'Identifiant du compte : $userIdentifier\n'
+      'Date de la demande : ${DateTime.now().toString().split('.')[0]}\n\n'
+      'Je confirme que je souhaite supprimer définitivement :\n'
+      '- Mon profil utilisateur\n'
+      '- Mes commandes et colis\n'
+      '- Mes informations personnelles\n'
+      '- Mon historique de livraisons\n\n'
+      'Cordialement.'
+    );
+
+    // Essayer d'ouvrir l'application email
+    final emailUri = Uri.parse('mailto:massalhadavy@gmail.com?subject=$subject&body=$body');
+    
+    try {
+      if (await canLaunchUrl(emailUri)) {
+        await launchUrl(emailUri);
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Votre application email va s\'ouvrir. Veuillez envoyer le message pour finaliser votre demande.'),
+              backgroundColor: Colors.green,
+              duration: Duration(seconds: 5),
+            ),
+          );
+        }
+      } else {
+        // Si l'email n'est pas disponible, afficher les informations de contact
+        if (context.mounted) {
+          _showContactInfoDialog(context, userIdentifier);
+        }
+      }
+    } catch (e) {
+      // Afficher les informations de contact en cas d'erreur
+      if (context.mounted) {
+        _showContactInfoDialog(context, userIdentifier);
+      }
+    }
+  }
+
+  void _showContactInfoDialog(BuildContext context, String userIdentifier) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Row(
+          children: [
+            Icon(Icons.email, color: Colors.blue),
+            SizedBox(width: 8),
+            Text('Contactez-nous'),
+          ],
+        ),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Pour demander la suppression de votre compte, veuillez nous contacter :',
+                style: TextStyle(fontSize: 16),
+              ),
+              const SizedBox(height: 16),
+              const Text(
+                'Email :',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              SelectableText(
+                'massalhadavy@gmail.com',
+                style: const TextStyle(color: Colors.blue, decoration: TextDecoration.underline),
+              ),
+              const SizedBox(height: 12),
+              const Text(
+                'Veuillez inclure dans votre message :',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 8),
+              Text('• Votre identifiant : $userIdentifier'),
+              const Text('• La mention "Demande de suppression de compte"'),
+              const SizedBox(height: 16),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.blue.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: const Row(
+                  children: [
+                    Icon(Icons.info_outline, color: Colors.blue, size: 20),
+                    SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        'Nous traiterons votre demande dans les plus brefs délais.',
+                        style: TextStyle(fontSize: 13),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          ElevatedButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Fermer'),
+          ),
+        ],
+      ),
     );
   }
 }

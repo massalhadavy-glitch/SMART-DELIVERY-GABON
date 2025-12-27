@@ -35,6 +35,36 @@ const ProfilePage = () => {
               Se déconnecter
             </button>
           </div>
+
+          <div className="profile-danger-zone" style={{ marginTop: '30px', padding: '20px', backgroundColor: '#fff3cd', borderRadius: '8px', border: '2px solid #ffc107' }}>
+            <h3 style={{ color: '#856404', marginBottom: '15px', display: 'flex', alignItems: 'center' }}>
+              <span style={{ marginRight: '8px' }}>⚠️</span>
+              Demande de Suppression de Données
+            </h3>
+            <p style={{ color: '#856404', marginBottom: '15px' }}>
+              Vous pouvez demander la suppression de votre compte et de toutes vos données associées.
+            </p>
+            <a 
+              href="/demande-suppression-donnees.html" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="btn"
+              style={{ 
+                backgroundColor: '#ff9800', 
+                color: 'white', 
+                textDecoration: 'none',
+                display: 'inline-block',
+                padding: '10px 20px',
+                borderRadius: '5px',
+                fontWeight: 'bold'
+              }}
+            >
+              Demander la suppression de mes données
+            </a>
+            <p style={{ color: '#856404', fontSize: '0.9em', marginTop: '10px' }}>
+              Cette action est irréversible. Toutes vos données seront définitivement supprimées.
+            </p>
+          </div>
         </div>
       </div>
     </div>
@@ -42,6 +72,10 @@ const ProfilePage = () => {
 };
 
 export default ProfilePage;
+
+
+
+
 
 
 

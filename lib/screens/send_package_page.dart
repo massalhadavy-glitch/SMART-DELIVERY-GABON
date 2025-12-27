@@ -45,15 +45,15 @@ class _SendPackagePageState extends State<SendPackagePage> {
   double cost = 0.0;
   bool _isSubmitting = false;
   final Map<String, double> deliveryCosts = {
-    'Standard (6H à 12H)': 2000,
-    'Express (2H à 5H)': 3000,
-    'Livraison LBV-Owendo': 3500,
-    'Livraison LBV-Akanda': 3500,
-    'Livraison AKANDA-Owendo': 4500,
+    'Standard (2H à 6H)': 2000,
+    'Express (30min à 2H)': 3000,
+    'Livraison LBV-Owendo': 3000,
+    'Livraison LBV-Akanda': 3000,
+    'Livraison AKANDA-Owendo': 3500,
   };
   final List<String> deliveryTypes = [
-    'Standard (6H à 12H)',
-    'Express (2H à 5H)',
+    'Standard (2H à 6H)',
+    'Express (30min à 2H)',
     'Livraison LBV-Owendo',
     'Livraison LBV-Akanda',
     'Livraison AKANDA-Owendo',

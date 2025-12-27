@@ -5,6 +5,16 @@ allprojects {
     }
 }
 
+// Force Java 11 pour tous les sous-projets
+subprojects {
+    afterEvaluate {
+        tasks.withType<org.gradle.api.tasks.compile.JavaCompile>().configureEach {
+            sourceCompatibility = JavaVersion.VERSION_11.toString()
+            targetCompatibility = JavaVersion.VERSION_11.toString()
+        }
+    }
+}
+
 val newBuildDir: Directory =
     rootProject.layout.buildDirectory
         .dir("../../build")

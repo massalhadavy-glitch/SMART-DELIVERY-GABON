@@ -15,7 +15,14 @@ class WhapiService {
       return false;
     }
 
-    final uri = Uri.parse('${WhapiConfig.baseUrl}/messages/text');
+    // S'assurer que l'URL utilise HTTPS (TLS)
+    String baseUrl = WhapiConfig.baseUrl;
+    if (!baseUrl.startsWith('https://')) {
+      baseUrl = baseUrl.replaceFirst('http://', 'https://');
+      debugPrint('⚠️ URL Whapi convertie en HTTPS pour la sécurité');
+    }
+    
+    final uri = Uri.parse('$baseUrl/messages/text');
 
     final payload = {
       'to': toPhoneWithoutPlus, // format sans +
@@ -23,8 +30,10 @@ class WhapiService {
       'message': message,
     };
 
+    // Utiliser HttpClient avec HTTPS forcé
     final client = HttpClient();
     try {
+      // Forcer HTTPS pour la sécurité TLS
       final request = await client.postUrl(uri);
       request.headers.set(HttpHeaders.contentTypeHeader, 'application/json');
       request.headers.set(HttpHeaders.authorizationHeader, 'Bearer ${WhapiConfig.authToken}');
@@ -43,6 +52,10 @@ class WhapiService {
     }
   }
 }
+
+
+
+
 
 
 

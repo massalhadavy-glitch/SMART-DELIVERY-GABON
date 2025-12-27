@@ -201,7 +201,7 @@ class _DriverTrackingPageState extends State<DriverTrackingPage> {
                       // TODO: Ouvrir les détails du colis si currentPackageId existe
                       Navigator.pop(context);
                     },
-                    icon: const Icon(Icons.package),
+                    icon: const Icon(Icons.local_shipping),
                     label: const Text('Voir colis'),
                   ),
                 ),

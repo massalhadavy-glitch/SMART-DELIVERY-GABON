@@ -1,0 +1,73 @@
+URL pour Google Play Console - Demande de Suppression de Données
+
+===========================================
+OPTION 1 : Page HTML (à héberger)
+===========================================
+
+Une page HTML a été créée : demande_suppression_donnees.html
+
+Pour l'utiliser :
+1. Hébergez ce fichier sur un serveur web (GitHub Pages, Netlify, Vercel, etc.)
+2. Utilisez l'URL complète dans Google Play Console
+
+Exemple d'URL après hébergement :
+https://votre-domaine.com/demande_suppression_donnees.html
+
+===========================================
+OPTION 2 : Google Forms (Rapide et Gratuit)
+===========================================
+
+1. Créez un formulaire Google Forms
+2. Ajoutez les champs nécessaires :
+   - Identifiant/Email
+   - Message de confirmation
+3. Partagez le formulaire et copiez l'URL
+
+URL à utiliser dans Google Play :
+https://forms.gle/VOTRE_ID_FORMULAIRE
+
+===========================================
+OPTION 3 : Service de Formulaire en Ligne
+===========================================
+
+Services gratuits disponibles :
+- Formspree : https://formspree.io
+- FormSubmit : https://formsubmit.co
+- Typeform : https://typeform.com
+
+===========================================
+OPTION 4 : Page GitHub Pages (Gratuit)
+===========================================
+
+1. Créez un repository GitHub
+2. Uploadez le fichier demande_suppression_donnees.html
+3. Activez GitHub Pages dans les paramètres
+4. URL sera : https://votre-username.github.io/votre-repo/demande_suppression_donnees.html
+
+===========================================
+OPTION 5 : Netlify Drop (Le Plus Rapide)
+===========================================
+
+1. Allez sur https://app.netlify.com/drop
+2. Glissez-déposez le fichier demande_suppression_donnees.html
+3. Obtenez une URL instantanée : https://random-name.netlify.app/demande_suppression_donnees.html
+
+===========================================
+RECOMMANDATION
+===========================================
+
+Pour une solution rapide et gratuite, utilisez Netlify Drop :
+1. Allez sur https://app.netlify.com/drop
+2. Glissez-déposez demande_suppression_donnees.html
+3. Copiez l'URL générée
+4. Utilisez cette URL dans Google Play Console
+
+===========================================
+Email de Contact Direct
+===========================================
+
+Si aucune URL n'est disponible, vous pouvez aussi indiquer dans la description :
+"Pour demander la suppression de vos données, contactez-nous à : massalhadavy@gmail.com"
+
+Mais Google Play préfère une vraie URL HTTP/HTTPS.
+

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <!-- Configuration de sécurité réseau pour Smart Delivery Gabon -->
+    
+    <!-- Par défaut, n'autoriser que HTTPS (TLS) -->
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <!-- Autoriser les certificats système -->
+            <certificates src="system" />
+            <!-- Autoriser les certificats utilisateur (pour le développement uniquement) -->
+            <certificates src="user" />
+        </trust-anchors>
+    </base-config>
+    
+    <!-- Configuration pour le domaine Supabase -->
+    <domain-config cleartextTrafficPermitted="false">
+        <domain includeSubdomains="true">supabase.co</domain>
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </domain-config>
+    
+    <!-- Configuration pour le domaine Supabase (alternatif) -->
+    <domain-config cleartextTrafficPermitted="false">
+        <domain includeSubdomains="true">supabase.io</domain>
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </domain-config>
+    
+    <!-- Désactiver complètement le trafic HTTP non chiffré -->
+    <!-- Aucune exception pour HTTP - uniquement HTTPS autorisé -->
+</network-security-config>
+
+
