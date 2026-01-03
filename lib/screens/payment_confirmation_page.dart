@@ -30,11 +30,11 @@ class _PaymentConfirmationPageState extends State<PaymentConfirmationPage> {
   String _phoneNumber = '';
   
   // VARIABLES POUR LA SÉLECTION DE LIVRAISON
-  String _selectedDeliveryType = 'Standard (2H à 6H)'; 
+  String _selectedDeliveryType = 'Livraison standard (2H à 6h)'; 
   double _extraCost = 2000; // Coût de base pour Standard
   final Map<String, double> _deliveryOptions = {
-    'Standard (2H à 6H)': 2000, // Coût total pour Standard
-    'Express (30min à 2H)': 3000, // Coût total pour Express
+    'Livraison standard (2H à 6h)': 2000, // Coût total pour Standard
+    'Livraison express (30min à 2h)': 3000, // Coût total pour Express
     'Livraison inter commune\n(ex: Libreville-Owendo)': 3000, // Coût total pour livraison inter commune
   };
 

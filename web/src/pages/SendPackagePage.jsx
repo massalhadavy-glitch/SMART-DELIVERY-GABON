@@ -22,16 +22,16 @@ const SendPackagePage = () => {
   const [trackingNumber, setTrackingNumber] = useState('');
 
   const deliveryCosts = {
-    'Standard (6H à 12H)': 2000,
-    'Express (2H à 5H)': 3000,
-    'Livraison LBV-Owendo': 3500,
-    'Livraison LBV-Akanda': 3500,
-    'Livraison AKANDA-Owendo': 4500,
+    'Livraison standard (2H à 6h)': 2000,
+    'Livraison express (30min à 2h)': 3000,
+    'Livraison LBV-Owendo': 3000,
+    'Livraison LBV-Akanda': 3000,
+    'Livraison AKANDA-Owendo': 3500,
   };
 
   const deliveryTypes = [
-    'Standard (6H à 12H)',
-    'Express (2H à 5H)',
+    'Livraison standard (2H à 6h)',
+    'Livraison express (30min à 2h)',
     'Livraison LBV-Owendo',
     'Livraison LBV-Akanda',
     'Livraison AKANDA-Owendo',

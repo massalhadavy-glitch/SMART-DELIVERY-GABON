@@ -30,12 +30,12 @@ const HomePage = () => {
             <div className="feature-card">
               <div className="feature-icon">⚡</div>
               <h3>Livraison Express</h3>
-              <p>Livraison rapide en 2 à 5 heures</p>
+              <p>Livraison rapide en 30min à 2h</p>
             </div>
             <div className="feature-card">
               <div className="feature-icon">📋</div>
               <h3>Livraison Standard</h3>
-              <p>Livraison standard en 6 à 12 heures</p>
+              <p>Livraison standard en 2H à 6h</p>
             </div>
             <div className="feature-card">
               <div className="feature-icon">🌍</div>

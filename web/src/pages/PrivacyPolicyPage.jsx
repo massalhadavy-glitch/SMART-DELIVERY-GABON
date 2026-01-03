@@ -44,7 +44,7 @@ const PrivacyPolicyPage = () => {
             <li>Adresse de ramassage</li>
             <li>Adresse de destination</li>
             <li>Type de colis (Documents, Petit colis, etc.)</li>
-            <li>Type de livraison (Express 2H-4H ou Standard -48H)</li>
+            <li>Type de livraison (Livraison express 30min à 2h ou Livraison standard 2H à 6h)</li>
             <li>Numéro de suivi unique</li>
             <li>Coût de la livraison</li>
             <li>Statut de la livraison</li>

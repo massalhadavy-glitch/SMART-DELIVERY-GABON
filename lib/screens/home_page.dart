@@ -184,14 +184,14 @@ class HomePage extends StatelessWidget {
                                 context,
                                 icon: '⚡',
                                 title: 'Livraison Express',
-                                description: 'Livraison rapide en 2 à 5 heures',
+                                description: 'Livraison rapide en 30min à 2h',
                               ),
                               const SizedBox(height: 12),
                               _buildServiceCard(
                                 context,
                                 icon: '📋',
                                 title: 'Livraison Standard',
-                                description: 'Livraison standard en 6 à 12 heures',
+                                description: 'Livraison standard en 2H à 6h',
                               ),
                               const SizedBox(height: 12),
                               _buildServiceCard(
