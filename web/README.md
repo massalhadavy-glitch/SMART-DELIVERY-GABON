@@ -31,7 +31,7 @@ Les fichiers seront générés dans le dossier `build/`
 ## 🎯 Fonctionnalités
 
 - **Page d'accueil** : Présentation des services
-- **Envoyer un colis** : Formulaire complet pour créer une commande
+- **Commander un livreur** : Formulaire complet pour créer une commande
 - **Suivi de colis** : Recherche par numéro de suivi
 - **Mes colis** : Liste des colis par numéro de téléphone
 - **Profil** : Page de profil utilisateur

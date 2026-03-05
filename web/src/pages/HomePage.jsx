@@ -8,12 +8,12 @@ const HomePage = () => {
       <div className="hero-section">
         <div className="hero-content">
           <h1 className="hero-title">Bienvenue sur Smart Delivery Gabon</h1>
-          <p className="hero-subtitle">Votre partenaire de confiance pour la livraison rapide et sécurisée</p>
+          <p className="hero-subtitle">Application de livraison de colis à Libreville</p>
           
           <div className="hero-actions">
             <Link to="/send" className="btn btn-primary">
               <span className="btn-icon">📦</span>
-              Envoyer un colis
+              Commander un livreur
             </Link>
             <Link to="/tracking" className="btn btn-secondary">
               <span className="btn-icon">🔍</span>
@@ -30,12 +30,12 @@ const HomePage = () => {
             <div className="feature-card">
               <div className="feature-icon">⚡</div>
               <h3>Livraison Express</h3>
-              <p>Livraison rapide en 30min à 2h</p>
+              <p>Option de livraison rapide</p>
             </div>
             <div className="feature-card">
               <div className="feature-icon">📋</div>
               <h3>Livraison Standard</h3>
-              <p>Livraison standard en 2H à 6h</p>
+              <p>Option de livraison standard</p>
             </div>
             <div className="feature-card">
               <div className="feature-icon">🌍</div>
@@ -45,7 +45,7 @@ const HomePage = () => {
             <div className="feature-card">
               <div className="feature-icon">🔒</div>
               <h3>Sécurisé</h3>
-              <p>Suivi en temps réel de vos colis</p>
+              <p>Suivi de vos colis dans l'application</p>
             </div>
           </div>
         </div>

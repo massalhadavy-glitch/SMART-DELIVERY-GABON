@@ -29,7 +29,7 @@ const Navbar = () => {
               to="/send" 
               className={`navbar-link ${isActive('/send') ? 'active' : ''}`}
             >
-              Envoyer un colis
+              Commander un livreur
             </Link>
           </li>
           <li>
