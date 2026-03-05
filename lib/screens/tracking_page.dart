@@ -211,7 +211,13 @@ class _TrackingResultCard extends StatelessWidget {
             // Détails rapides
             _buildDetailRow(Icons.pin_drop, 'Départ', package.pickupAddress),
             _buildDetailRow(Icons.assistant_navigation, 'Arrivée', package.destinationAddress),
-            _buildDetailRow(Icons.label_outline, 'Type', package.packageType),
+            _buildDetailRow(
+              Icons.label_outline, 
+              'Nature', 
+              package.packageValue != null 
+                ? '${package.packageType} (Valeur: ${package.packageValue!.toInt()} FCFA)'
+                : package.packageType
+            ),
             _buildDetailRow(Icons.local_shipping, 'Statut Actuel', package.status),
 
             const SizedBox(height: 20),

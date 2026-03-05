@@ -37,7 +37,13 @@ class PackageDetailPage extends StatelessWidget {
             const Divider(),
             _buildInfoRow(Icons.location_on_outlined, 'Ramassage', package.pickupAddress),
             _buildInfoRow(Icons.pin_drop_outlined, 'Destination', package.destinationAddress),
-            _buildInfoRow(Icons.inventory_2_outlined, 'Type de Colis', package.packageType),
+            _buildInfoRow(
+              Icons.inventory_2_outlined, 
+              'Nature du Colis', 
+              package.packageValue != null 
+                ? '${package.packageType} (Valeur: ${package.packageValue!.toInt()} FCFA)'
+                : package.packageType
+            ),
             _buildInfoRow(Icons.schedule, 'Livraison', package.deliveryType),
             _buildInfoRow(Icons.attach_money, 'Coût', '${package.cost.toInt()} FCFA'),
             const SizedBox(height: 30),

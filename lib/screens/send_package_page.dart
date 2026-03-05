@@ -39,6 +39,7 @@ class _SendPackagePageState extends State<SendPackagePage> {
   final TextEditingController pickupAddressController = TextEditingController();
   final TextEditingController destinationAddressController = TextEditingController();
   final TextEditingController packageNatureController = TextEditingController();
+  final TextEditingController packageValueController = TextEditingController();
 
   String? deliveryType;
   String? paymentMethod; // 👈 Nouveau champ
@@ -176,6 +177,7 @@ class _SendPackagePageState extends State<SendPackagePage> {
     pickupAddressController.dispose();
     destinationAddressController.dispose();
     packageNatureController.dispose();
+    packageValueController.dispose();
     super.dispose();
   }
 
@@ -225,6 +227,10 @@ class _SendPackagePageState extends State<SendPackagePage> {
 
       final trackingNumber = 'SD-${DateTime.now().millisecondsSinceEpoch % 100000}';
 
+      final packageValue = packageValueController.text.isNotEmpty 
+          ? double.tryParse(packageValueController.text) 
+          : null;
+
       final package = Package(
         id: trackingNumber,
         trackingNumber: trackingNumber,
@@ -235,6 +241,7 @@ class _SendPackagePageState extends State<SendPackagePage> {
         pickupAddress: pickupAddressController.text,
         destinationAddress: destinationAddressController.text,
         packageType: packageNatureController.text,
+        packageValue: packageValue,
         deliveryType: deliveryType!,
         status: 'En attente de collecte',
         cost: cost,
@@ -272,6 +279,7 @@ class _SendPackagePageState extends State<SendPackagePage> {
           cost = 0.0;
         });
         packageNatureController.clear();
+        packageValueController.clear();
 
         // 🔹 Message de confirmation avec redirection vers la home page
         showDialog(
@@ -707,6 +715,22 @@ class _SendPackagePageState extends State<SendPackagePage> {
                           label: "Nature du colis *",
                           hintText: "Ex: Documents, Vêtements, etc.",
                           validator: (v) => v == null || v.isEmpty ? 'Champ requis' : null,
+                        ),
+                        const SizedBox(height: 16),
+                        _buildFormField(
+                          controller: packageValueController,
+                          label: "Valeur du colis (FCFA)",
+                          hintText: "Ex: 50000",
+                          keyboardType: TextInputType.number,
+                          validator: (v) {
+                            if (v != null && v.isNotEmpty) {
+                              final value = double.tryParse(v);
+                              if (value == null || value < 0) {
+                                return 'Valeur invalide';
+                              }
+                            }
+                            return null;
+                          },
                         ),
                         const SizedBox(height: 16),
                         _buildDropdownField(

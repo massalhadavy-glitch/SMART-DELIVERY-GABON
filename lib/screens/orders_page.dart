@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/package_notifier.dart';
-import '../models/package.dart';
 
 class OrdersPage extends StatelessWidget {
   const OrdersPage({super.key});
@@ -164,8 +163,10 @@ class OrdersPage extends StatelessWidget {
                           ),
                           const SizedBox(height: 8),
                           _buildDetailRow(
-                            'Type:',
-                            package.packageType,
+                            'Nature:',
+                            package.packageValue != null 
+                              ? '${package.packageType} (Valeur: ${package.packageValue!.toInt()} FCFA)'
+                              : package.packageType,
                             Icons.inventory_2,
                           ),
                           const SizedBox(height: 8),

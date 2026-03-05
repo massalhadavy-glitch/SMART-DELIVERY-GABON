@@ -8,6 +8,7 @@ class Package {
   final String pickupAddress;
   final String destinationAddress;
   final String packageType;
+  final double? packageValue; // Valeur du colis en FCFA
   final String deliveryType;
   final String status;
   final double cost;
@@ -35,6 +36,7 @@ class Package {
     required this.pickupAddress,
     required this.destinationAddress,
     required this.packageType,
+    this.packageValue,
     required this.deliveryType,
     required this.status,
     required this.cost,
@@ -55,6 +57,7 @@ class Package {
       pickupAddress: pickupAddress,
       destinationAddress: destinationAddress,
       packageType: packageType,
+      packageValue: packageValue,
       deliveryType: deliveryType,
       status: status ?? this.status,
       cost: cost,
@@ -89,6 +92,7 @@ class Package {
       pickupAddress: data['pickup_address']?.toString() ?? data['pickupAddress']?.toString() ?? '',
       destinationAddress: data['destination_address']?.toString() ?? data['destinationAddress']?.toString() ?? '',
       packageType: data['package_type']?.toString() ?? data['packageType']?.toString() ?? '',
+      packageValue: data['package_value'] != null ? (data['package_value'] as num).toDouble() : (data['packageValue'] != null ? (data['packageValue'] as num).toDouble() : null),
       deliveryType: data['delivery_type']?.toString() ?? data['deliveryType']?.toString() ?? '',
       status: data['status']?.toString() ?? 'En attente de collecte',
       cost: (data['cost'] as num?)?.toDouble() ?? 0.0,
@@ -108,6 +112,7 @@ class Package {
       'pickup_address': pickupAddress,
       'destination_address': destinationAddress,
       'package_type': packageType,
+      'package_value': packageValue,
       'delivery_type': deliveryType,
       'status': status,
       'cost': cost,
